@@ -1,0 +1,15 @@
+pyyaml 
+setuptools
+numpy 
+attrs 
+decorator  
+absl-py 
+cloudpickle 
+psutil 
+scipy 
+synr 
+tornado
+torch==2.1.0
+torch-npu==2.1.0.post3 
+multiprocessing 
+inspect

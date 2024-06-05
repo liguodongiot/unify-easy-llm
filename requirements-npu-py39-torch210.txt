@@ -1,0 +1,41 @@
+# 基础
+pandas==2.2.2
+tqdm==4.62.3 
+jieba==0.42.1
+httpx==0.26.0
+scipy==1.10.1
+pyyaml==6.0.1
+setuptools
+decorator==5.1.1
+attrs==23.2.0
+cloudpickle==3.0.0
+synr
+tornado==6.4
+absl-py==2.1.0
+psutil==5.9.8
+numpy==1.24.4
+pyarrow==16.1.0
+loguru==0.7.2
+# multiprocessing 
+# inspect
+
+# 训练
+torch==2.1.0
+torch-npu==2.1.0.post3 
+transformers
+accelerate
+datasets==2.14.1
+deepspeed==0.14.2
+tiktoken==0.5.2
+sentencepiece==0.1.99
+# bitsandbytes==0.42.0
+peft==0.11.1
+einops==0.8.0
+transformers_stream_generator==0.0.5
+
+# 日志
+tensorboard
+
+# 评估
+rouge_chinese==1.0.3
+nltk==3.8.1
