@@ -70,35 +70,25 @@ def load_lora_model(args, training_args, model_config):
     import torch.distributed as dist
     dist_initialized = dist.is_initialized()
     if not dist_initialized:
-        logger.info("----ddp")
-        device_map = {'': local_rank}
-    else:
         logger.info("----auto")
         device_map = "auto"
-    
+    else:
+        logger.info("----ddp")
+        device_map = {'': local_rank}
+
     logger.info(f'微调类型：{args.sft_type}')
+    use_cache = False if training_args.gradient_checkpointing else True
     if args.sft_type == "lora":
         load_in_8bit = bool(args.load_in_8bit)
         logger.info(f'是否8bit加载：{load_in_8bit}')
-        # 加载模型
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model_name_or_path,
-            device_map=device_map,
-            load_in_8bit=load_in_8bit,
-            torch_dtype=torch.float16,
-            trust_remote_code=True,
-        )
         if not load_in_8bit:
-            model.enable_input_require_grads()
+            quant_config = None
+        else:
+            from transformers import BitsAndBytesConfig
+            quant_config = BitsAndBytesConfig(load_in_8bit=True)
     elif args.sft_type == "qlora":
         from transformers import BitsAndBytesConfig
-        model = AutoModelForCausalLM.from_pretrained(
-            args.model_name_or_path,
-            device_map=device_map,
-            load_in_4bit=True,
-            torch_dtype=torch.float16,
-            trust_remote_code=True,
-            quantization_config=BitsAndBytesConfig(
+        quant_config = BitsAndBytesConfig(
                 load_in_4bit=True,
                 bnb_4bit_compute_dtype=torch.float16,
                 bnb_4bit_use_double_quant=True,
@@ -106,16 +96,32 @@ def load_lora_model(args, training_args, model_config):
                 llm_int8_threshold=6.0,
                 llm_int8_has_fp16_weight=False,
             )
-        )
     else:
         logger.info(f'目前暂不支持该微调类型：{args.sft_type}')
         sys.exit(12)
 
-    model.config.use_cache = False if training_args.gradient_checkpointing else True
+    # 加载模型
+    model = AutoModelForCausalLM.from_pretrained(
+        args.model_name_or_path,
+        device_map=device_map,
+        use_cache = use_cache,
+        torch_dtype=torch.float16,
+        trust_remote_code=True,
+        quantization_config=quant_config
+    )
+    
+    if (not load_in_8bit) and args.sft_type != 'qlora':
+        if hasattr(model, "enable_input_require_grads"):
+            model.enable_input_require_grads()
+        else:
+            def make_inputs_require_grad(module, input, output):
+                output.requires_grad_(True)
+            model.get_input_embeddings().register_forward_hook(make_inputs_require_grad)
+    else:
+        # casts all the non int8 modules to full precision (fp32) for stability
+        logger.info(f"gradient_checkpointing: {training_args.gradient_checkpointing}")
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
 
-    # casts all the non int8 modules to full precision (fp32) for stability
-    logger.info(f"gradient_checkpointing: {training_args.gradient_checkpointing}")
-    model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=training_args.gradient_checkpointing)
     # model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
     logger.info(f'memory footprint of model: {model.get_memory_footprint()/(1024*1024*1024)} GB')
 

@@ -53,7 +53,3 @@ def is_npu_available(check_device=False):
     return hasattr(torch, "npu") and torch.npu.is_available()
 
 
-
-
-
-

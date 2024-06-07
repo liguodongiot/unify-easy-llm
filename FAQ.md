@@ -13,6 +13,24 @@ module 'torch_npu.npu' has no attribute 'mem_get_info'
 pip3 install torch-npu==2.1.0.post3
 ```
 
+---
+
+
+ValueError: Attempting to unscale FP16 gradients. 
+
+
+unscale 梯度， 对于FP16不支持，需要转换成FP32.
+```
+https://github.com/huggingface/transformers/blob/v4.41.2/src/transformers/trainer.py#L2262
+
+https://gitee.com/ascend/pytorch/blob/v2.1.0-6.0.rc1/torch_npu/npu/amp/grad_scaler.py#L241
+
+https://github.com/pytorch/pytorch/blob/v2.1.0/torch/distributed/fsdp/sharded_grad_scaler.py#L200
+
+```
+
+
+
 
 
 
