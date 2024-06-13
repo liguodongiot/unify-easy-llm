@@ -14,7 +14,7 @@ from component.trainer import Trainer, LoRATrainer
 from component.dataset import UnifiedSFTDataset, UnifiedEvalDataset
 from component.eval import model_eval, metric_desc, metric_title
 from component.common import print_rank_0
-from component.callback import TianQiongCallback, save_progress, load_progress
+from component.callback import CustomCallback, save_progress, load_progress
 from component.template import template_dict
 from component.train_utils import setup_everything, load_tokenizer, save_metrics_to_disk
 from component.train_lora_utils import verify_model_dtype, find_all_linear_names, target_modules_dict, merge_lora_to_base_model
@@ -167,7 +167,7 @@ def init_components(args, training_args):
     # 加载collator
     data_collator = SFTDataCollator(tokenizer, args.max_seq_length)
     # 回调
-    tianqiong = TianQiongCallback(training_args, args)
+    tianqiong = CustomCallback(training_args, args)
 
     if args.sft_type == 'lora' or args.sft_type == 'qlora':
         model = load_lora_model(args, training_args, model_config)

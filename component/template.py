@@ -69,6 +69,17 @@ register_template(
     system="你是一个有用的助手，请仔细遵循用户的指示进行响应。"
 )
 
+
+register_template(
+    template_name='glm4',
+    start_word = "[gMASK]<sop>", 
+    system_format='<|sysmtem|>\n{content}',
+    user_format='<|user|>\n{content}',
+    assistant_prompt_prefix='<|assistant|>\n',
+    assistant_format='{content}',
+    system="你是一个有用的助手，请仔细遵循用户的指示进行响应。"
+)
+
 register_template(
     template_name='baichuan',
     start_word = None, 

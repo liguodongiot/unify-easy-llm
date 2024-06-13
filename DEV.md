@@ -23,6 +23,24 @@ docker exec -it pytorch_dev bash
 ```
 
 
+```
+docker pull nvcr.io/nvidia/pytorch:24.05-py3
+
+docker rm -f  pytorch_cuda_dev
+
+sudo docker run -it --gpus '"device=5"' \
+--name pytorch_cuda_dev \
+--shm-size 4G \
+-w /workspace \
+--env PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128 \
+nvcr.io/nvidia/pytorch:24.05-py3 \
+/bin/bash
+
+docker start pytorch_cuda_dev
+docker exec -it pytorch_cuda_dev bash
+```
+
+
 ## Conda 
 ```
 conda init
@@ -58,11 +76,34 @@ pip install --no-cache-dir -r requirements-npu.txt -i https://mirrors.aliyun.com
 ## 构建镜像
 ```
 cd /data/containerd/workspace/
-docker build --network=host -f llm-train/train-env.Dockerfile -t harbor.llm.io/base/llm-train-unify:v1-20240603 .
+docker build --network=host -f npu.Dockerfile -t harbor.llm.io/base/llm-train-unify:v1-20240603-cann8 .
 
 ```
 
+```
+docker build --network=host -f gpu.Dockerfile -t harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 .
+
+
+
+sudo docker run -it --rm --gpus '"device=5"' \
+--shm-size 4G \
+-w /workspace \
+--env PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128 \
+harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
+/bin/bash
+```
+
+
+
+
+
 ## 启动训练任务
+
+
+```
+deepspeed --num_gpus=1 train_lora.py --train_args_file $TRAIN_ARGS_PATH
+```
+
 
 ```
 docker run -it -u root \
@@ -87,4 +128,45 @@ docker run -it -u root \
 harbor.llm.io/base/llm-train-unify:v1-20240603 \
 /bin/bash -c '. ~/.bashrc &&  conda activate llm-dev && sh /workspace/llm-train/scipts/local_run_unify_lora_npu.sh'
 
+```
+
+
+```
+docker build --network=host -f gpu.Dockerfile -t harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 .
+
+sudo docker run -it --rm --gpus all \
+--shm-size 4G \
+-v /data/hpc/home/guodong.li:/home/guodong.li \
+--env PYTHONPATH=/usr/local/py-env-low/local/lib/python3.10/dist-packages:$PYTHONPATH \
+--env PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128 \
+--env CUDA_VISIBLE_DEVICES=7 \
+harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
+/bin/bash /app/scripts/local_run_unify_sft_gpu.sh
+```
+
+
+
+```
+docker build --network=host -f gpu.Dockerfile -t harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 .
+
+sudo docker run -it --rm --gpus all \
+--shm-size 4G \
+-v /data/hpc/home/guodong.li:/home/guodong.li \
+--env PYTHONPATH=/usr/local/py-env-low/local/lib/python3.10/dist-packages:$PYTHONPATH \
+--env PYTORCH_CUDA_ALLOC_CONF=max_split_size_mb:128 \
+--env CUDA_VISIBLE_DEVICES=7 \
+harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
+/bin/bash /app/scripts/local_run_unify_lora_gpu.sh
+
+
+```
+
+glm4:
+
+```
+sudo docker run -it --rm --gpus '"device=6,7"' \
+--shm-size 4G \
+-v /data/hpc/home/guodong.li/workspace/temp:/home/guodong.li/workspace/temp \
+harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
+/bin/bash /app/scripts/local_run_unify_sft_gpu.sh
 ```

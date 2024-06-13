@@ -11,7 +11,7 @@ from transformers.trainer import Trainer
 from transformers import TrainingArguments
 
 from component.common import print_rank_0
-from component.argument import TianqiongArguments
+from component.argument import UnifyArguments
 
 import os
 import json
@@ -46,10 +46,10 @@ def load_progress(args):
 
 
 
-class TianQiongCallback(TrainerCallback):
+class CustomCallback(TrainerCallback):
     "A callback that prints a message at the beginning of training"
 
-    def __init__(self, training_args: TrainingArguments, custom_arg:TianqiongArguments):
+    def __init__(self, training_args: TrainingArguments, custom_arg:UnifyArguments):
         self.train_progress = load_progress(training_args)
         self.custom_arg = custom_arg
         print_rank_0("init callback ...")

@@ -1,10 +1,12 @@
 
 BASE_CODE_PATH="/home/guodong.li"
-PROJECT_PATH="$BASE_CODE_PATH/workspace/llm-train"
+#PROJECT_PATH="$BASE_CODE_PATH/workspace/unify-easy-llm"
+PROJECT_PATH="/app"
 TRAIN_ARGS_PATH="$PROJECT_PATH/sft-config.json"
 # /home/guodong.li/workspace/temp/output/progress.json
 LOCAL_PROGRESS_PATH="$BASE_CODE_PATH/workspace/temp/output/progress.json"
 
+touch $LOCAL_PROGRESS_PATH
 cat <<EOF > $LOCAL_PROGRESS_PATH
 {
     "metrics": {},
@@ -52,7 +54,7 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "weight_decay": 0,
     "max_grad_norm": 0.3,
     "remove_unused_columns": false,
-    "prompt_template_name": "bloom"
+    "prompt_template_name": "glm4"
 }
 EOF
 
@@ -60,9 +62,11 @@ EOF
 echo "训练参数: "
 cat $TRAIN_ARGS_PATH
 
-gpu_num=1
+gpu_num=2
 echo "执行训练任务脚本："
-echo "cd $PROJECT_PATH && CUDA_VISIBLE_DEVICES=5 torchrun --nproc_per_node=$gpu_num train_lora.py --train_args_file $TRAIN_ARGS_PATH"
+echo "cd $PROJECT_PATH && torchrun --nproc_per_node=$gpu_num train_unify.py --train_args_file $TRAIN_ARGS_PATH"
 
-cd $PROJECT_PATH && CUDA_VISIBLE_DEVICES=5  torchrun --nproc_per_node=$gpu_num train_lora.py --train_args_file $TRAIN_ARGS_PATH
+# cd $PROJECT_PATH && deepspeed --num_gpus=$gpu_num train_s3.py --train_args_file $TRAIN_ARGS_PATH
+
+cd $PROJECT_PATH && torchrun --nproc_per_node=$gpu_num --master_port=29001 train_unify.py --train_args_file $TRAIN_ARGS_PATH
 #  --master_addr

@@ -1,11 +1,11 @@
 
 BASE_CODE_PATH="/home/guodong.li"
-PROJECT_PATH="$BASE_CODE_PATH/workspace/llm-train"
-
+#PROJECT_PATH="$BASE_CODE_PATH/workspace/unify-easy-llm"
+PROJECT_PATH="/app"
 TRAIN_ARGS_PATH="$PROJECT_PATH/sft-config.json"
-
 LOCAL_PROGRESS_PATH="$BASE_CODE_PATH/workspace/temp/output/progress.json"
 
+touch $LOCAL_PROGRESS_PATH
 cat <<EOF > $LOCAL_PROGRESS_PATH
 {
     "metrics": {},
@@ -29,6 +29,7 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "deepspeed": "$PROJECT_PATH/train_args/ds_z2_offload.json",
 
     "num_train_epochs": 1,
+    "max_steps": 10,
     "per_device_train_batch_size": 1,
     "gradient_accumulation_steps": 4,
     "learning_rate": 1e-5,
@@ -49,7 +50,7 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "weight_decay": 0,
     "max_grad_norm": 1.0,
     "remove_unused_columns": false,
-    "prompt_template_name": "default"
+    "prompt_template_name": "glm4"
 }
 EOF
 
@@ -58,6 +59,6 @@ cat $TRAIN_ARGS_PATH
 
 gpu_num=2
 echo "执行训练任务脚本："
-echo "cd $PROJECT_PATH && CUDA_VISIBLE_DEVICES=0,5 deepspeed --num_gpus=$gpu_num train.py --train_args_file $TRAIN_ARGS_PATH"
-cd $PROJECT_PATH && CUDA_VISIBLE_DEVICES=0,5 deepspeed --num_gpus=$gpu_num train.py --train_args_file $TRAIN_ARGS_PATH
+echo "cd $PROJECT_PATH && deepspeed --num_gpus=$gpu_num train_unify.py --train_args_file $TRAIN_ARGS_PATH"
+cd $PROJECT_PATH && deepspeed --num_gpus=$gpu_num train_unify.py --train_args_file $TRAIN_ARGS_PATH
 

@@ -18,7 +18,7 @@ from component.trainer import Trainer, LoRATrainer
 from component.dataset import UnifiedSFTDataset, UnifiedEvalDataset
 from component.eval import model_eval, metric_desc, metric_title
 from component.common import print_rank_0
-from component.callback import TianQiongCallback, save_progress, load_progress
+from component.callback import save_progress, load_progress
 from component.template import template_dict
 
 from itertools import chain

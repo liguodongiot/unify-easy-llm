@@ -54,7 +54,7 @@ class UnifiedSFTDataset(Dataset):
         # 每条数据拼接格式为: {start_word}{system_format}{user_format}{assistant_prompt_prefix}{assistant_format}{user_format}{assistant_prompt_prefix}{assistant_format}...
         data = self.data_list[index]
         conversations = data['conversations']
-        prompt = data['prompt']
+        # prompt = data['prompt']
 
         input_ids = []
         target_mask = []
@@ -65,7 +65,11 @@ class UnifiedSFTDataset(Dataset):
             target_mask += [0] * len(start_word_ids)
 
         if self.system_format is not None:
+            prompt = ""
+            if data['conversations'][0].get("from") == "system":
+                prompt = data['conversations'][0].get("value")
             system = prompt if prompt is not None and len(prompt) != 0 else self.system
+            
             if system is not None:
                 system_text = self.system_format.format(content=system)
                 system_text_ids = self.tokenizer.encode(system_text, add_special_tokens=False)
@@ -151,7 +155,7 @@ class UnifiedEvalDataset(Dataset):
         data = self.data_list[index]
 
         conversations = data['conversations']
-        prompt = data['prompt']
+        # prompt = data['prompt']
 
         text = ""
         label = ""
@@ -160,6 +164,9 @@ class UnifiedEvalDataset(Dataset):
             text += self.start_word
 
         if self.system_format is not None:
+            prompt = ""
+            if data['conversations'][0].get("from") == "system":
+                prompt = data['conversations'][0].get("value")
             system = prompt if prompt is not None and len(prompt) != 0 else self.system
             if system is not None:
                 system_text = self.system_format.format(content=system)
