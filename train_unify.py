@@ -2,12 +2,7 @@ from loguru import logger
 import os
 from os.path import join
 import torch
-from transformers import (
-    set_seed,
-    HfArgumentParser,
-    TrainingArguments,
-    AutoTokenizer, AutoConfig, AutoModelForCausalLM
-)
+from transformers import AutoConfig, AutoModelForCausalLM
 
 from component.collator import SFTDataCollator
 from component.trainer import Trainer, LoRATrainer
@@ -23,7 +18,6 @@ from component.imports import is_bnb_available
 
 import traceback
 import sys
-import os
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftModel
 
 

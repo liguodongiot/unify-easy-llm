@@ -7,24 +7,19 @@
     "wall_clock_breakdown": false,
   
     "optimizer": {
-      "type": "Adamw",
-      "params": {
-        "lr": "auto",
-        "betas": "auto",
-        "eps": "auto",
-        "weight_decay": "auto"
+        "type": "Adam",
+        "params": {
+          "lr": "auto"
       }
     },
-
     "scheduler": {
-        "type": "WarmupLR",
-        "params": {
-            "warmup_min_lr": "auto",
-            "warmup_max_lr": "auto",
-            "warmup_num_steps": "auto"
-        }
+      "type": "WarmupLR",
+      "params": {
+          "warmup_min_lr": "auto",
+          "warmup_max_lr": "auto",
+          "warmup_num_steps": "auto"
+      }
     },
-
     "fp16": {
       "enabled": "auto",
       "loss_scale": 0,

@@ -170,3 +170,26 @@ sudo docker run -it --rm --gpus '"device=6,7"' \
 harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
 /bin/bash /app/scripts/local_run_unify_sft_gpu.sh
 ```
+
+
+## CPU
+
+
+```
+conda activate pytorch-venv
+
+sh scripts/local_run_unify_sft_cpu.sh
+
+python train_unify.py --train_args_file /Users/liguodong/work/github/lgd/unify-easy-llm/train_args/sft-config-cpu.json
+
+
+
+"deepspeed": "/Users/liguodong/work/github/lgd/unify-easy-llm/train_args/ds_z2_offload.json",
+
+```
+
+
+```
+pip install py-cpuinfo 
+sudo pip install deepspeed
+```
