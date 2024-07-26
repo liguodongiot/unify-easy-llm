@@ -1,6 +1,39 @@
 
 
+
+
+## 本地环境
+
+
+```
+export BASE_CODE_PATH="/home/guodong.li"
+export LOCAL_TEMP_DIR=$BASE_CODE_PATH/workspace/temp
+export LOCAL_DATASET_PATH="$LOCAL_TEMP_DIR/datas"
+export LOCAL_MODEL_PATH="$LOCAL_TEMP_DIR/models"
+export LOCAL_OUTPUT_PATH="$LOCAL_TEMP_DIR/outputs"
+export LOCAL_LOG_PATH="$LOCAL_TEMP_DIR/logs"
+# lora
+export LOCAL_MERGE_PATH="$LOCAL_TEMP_DIR/merges"
+# 进度
+export LOCAL_PROGRESS_PATH=$LOCAL_OUTPUT_PATH"/progress.json"
+
+
+#rm -rf $LOCAL_TEMP_DIR
+mkdir -p $LOCAL_DATASET_PATH
+mkdir -p $LOCAL_MODEL_PATH
+mkdir -p $LOCAL_OUTPUT_PATH
+mkdir -p $LOCAL_LOG_PATH
+# lora
+mkdir -p $LOCAL_MERGE_PATH
+
+```
+
+
+
+
+
 ## Docker
+
 ```
 docker pull docker.io/pepesi/ascend-base:ubuntu2204-py39-cann8-210
 
@@ -94,11 +127,7 @@ harbor.llm.io/base/llm-train-unify:v1-20240603-cuda124 \
 ```
 
 
-
-
-
 ## 启动训练任务
-
 
 ```
 deepspeed --num_gpus=1 train_lora.py --train_args_file $TRAIN_ARGS_PATH
@@ -192,4 +221,13 @@ python train_unify.py --train_args_file /Users/liguodong/work/github/lgd/unify-e
 ```
 pip install py-cpuinfo 
 sudo pip install deepspeed
+```
+
+
+
+## 推理
+
+```
+export LD_LIBRARY_PATH=/usr/local/Ascend/driver/lib64/common/:$LD_LIBRARY_PATH
+source /usr/local/Ascend/ascend-toolkit/set_env.sh
 ```

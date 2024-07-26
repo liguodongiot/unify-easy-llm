@@ -36,6 +36,7 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "max_steps": 10,
     "per_device_train_batch_size": 1,
     "gradient_accumulation_steps": 4,
+    "save_safetensors": true,
     "learning_rate": 1e-5,
     "max_seq_length": 1024,
     "logging_steps": 1,

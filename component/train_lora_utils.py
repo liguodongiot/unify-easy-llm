@@ -202,7 +202,7 @@ def merge_lora_to_base_model(args, training_args):
     model = model.merge_and_unload()
 
     tokenizer.save_pretrained(save_path)
-    model.save_pretrained(save_path)
+    model.save_pretrained(save_path, safe_serialization=True)
 
 
 

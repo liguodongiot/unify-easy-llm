@@ -1,10 +1,10 @@
 
 # source /usr/local/Ascend/ascend-toolkit/set_env.sh
 #export LD_PRELOAD=/workspace/conda/lib/libgomp.so.1
-export LD_PRELOAD=/workspace/installs/conda/envs/llm-dev/bin/../lib/libgomp.so.1
+# export LD_PRELOAD=/workspace/installs/conda/envs/llm-dev/bin/../lib/libgomp.so.1
 
 BASE_CODE_PATH=""
-PROJECT_PATH="/workspace/llm-train"
+PROJECT_PATH="/workspace/unify-easy-llm"
 TRAIN_ARGS_PATH="$PROJECT_PATH/sft-config.json"
 # /home/guodong.li/workspace/temp/output/progress.json
 LOCAL_PROGRESS_PATH="$BASE_CODE_PATH/workspace/temp/output/progress.json"
@@ -28,13 +28,14 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "sft_type": "lora",
     "output_dir": "$BASE_CODE_PATH/workspace/temp/output",
     "logging_dir": "$BASE_CODE_PATH/workspace/temp/logs",
-    "model_name_or_path": "$BASE_CODE_PATH/workspace/model/Qwen1.5-7B-Chat",
-    "train_file": "$BASE_CODE_PATH/workspace/temp/datas",
+    "model_name_or_path": "/workspace/models/Qwen1.5-7B-Chat",
+    "train_file": "$PROJECT_PATH/datasets",
     "model_metrics_path": "$BASE_CODE_PATH/workspace/temp/output/progress.json",
     "model_temp_output_path": "$BASE_CODE_PATH/workspace/temp/outputs",
     "model_temp_merge_path": "$BASE_CODE_PATH/workspace/temp/merges",
     "num_train_epochs": 1,
     "max_steps": 10,
+    "save_safetensors": true,
     "per_device_train_batch_size": 2,
     "gradient_accumulation_steps": 16,
     "learning_rate": 2e-4,
@@ -52,7 +53,7 @@ cat <<EOF > $TRAIN_ARGS_PATH
     "disable_tqdm": false,
     "optim": "adamw_hf",
     "seed": 42,
-    "fp16": true,
+    "bf16": true,
     "report_to": "tensorboard",
     "dataloader_num_workers": 0,
     "save_strategy": "steps",
