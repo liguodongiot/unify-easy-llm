@@ -40,6 +40,7 @@ target_modules_dict = {
     "qwen": ['c_attn','c_proj'],
     "qwen2": ['q_proj','v_proj'],
     "qwen3": ['q_proj','v_proj'],
+    "qwen3MoE": ['q_proj', 'k_proj', 'v_proj', 'o_proj', 'gate_proj', 'up_proj', 'down_proj'],
     "baichuan": ['W_pack','o_proj'],
     "chatglm": ['query_key_value']
 }

@@ -12,6 +12,7 @@
 
 - baichuan/baichuan2
 - qwen/qwen1.5/qwen2/qwen3
+- qwen3-30b-a3b (MoE)
 - glm3/glm4
 
 
