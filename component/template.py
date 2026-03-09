@@ -60,6 +60,17 @@ register_template(
 
 
 register_template(
+    template_name='qwen3',
+    start_word = None, 
+    system_format='<|im_start|>system\n{content}<|im_end|>\n',
+    user_format='<|im_start|>user\n{content}<|im_end|>\n',
+    assistant_prompt_prefix='<|im_start|>assistant\n',
+    assistant_format='{content}<|im_end|>\n',
+    system="你是一个有用的助手。"
+)
+
+
+register_template(
     template_name='chatglm3',
     start_word = None, 
     system_format='<|sysmtem|>\n{content}',

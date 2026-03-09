@@ -11,7 +11,7 @@
 ## 支持的模型
 
 - baichuan/baichuan2
-- qwen/qwen1.5/qwen2
+- qwen/qwen1.5/qwen2/qwen3
 - glm3/glm4
 
 

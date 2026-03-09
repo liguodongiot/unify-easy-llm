@@ -39,6 +39,7 @@ target_modules_dict = {
     "bloom": ['query_key_value'],
     "qwen": ['c_attn','c_proj'],
     "qwen2": ['q_proj','v_proj'],
+    "qwen3": ['q_proj','v_proj'],
     "baichuan": ['W_pack','o_proj'],
     "chatglm": ['query_key_value']
 }
